@@ -1,0 +1,51 @@
+﻿@page "/createuser"
+
+<h3>Register an Account</h3>
+<div class="container d-flex justify-content-center align-items-center min-vh-100">
+    <form class="card p-4 rounded-4 shadow-sm" style="width: 80%;">
+        <div class="row justify-content-between">
+            <div class="col-6">
+                <label class="form-label" for="first-name">First Name</label>
+                <input class="form-control" type="text" id="first-name"/>
+            </div>
+            <div class="col-6">
+                <label class="form-label" for="last-name">Last Name</label>
+                <input class="form-control" type="text" id="last-name" />
+            </div>
+            <div class="col-6">
+                <div class="col-12">
+                    <label class="form-label" for="contactnumber">Contact No.</label>
+                    <input class="form-control" type="number" id="contactnumber"/>
+                </div>
+                <div class="col-12">
+                    <label class="form-label" for="email">Email</label>
+                    <input class="form-control" type="email" id="email" />
+                </div>
+            </div>
+            <div class="col-6 input-group">
+                <div class="input-group-text">
+                    @* <input class="form-check-input mt-0" type="radio" value="Renter" id="renter" name="usertype" aria-label=""> *@
+                    <input type="radio" value="Renter" id="renter" name="usertype" aria-label="">
+                    <label for="renter">Renter</label>
+                </div>
+                <div class="input-group-text">
+                    <input type="radio" value="Owner" id="owner" name="usertype" aria-label="">
+                    <label for="owner">Owner</label>
+                </div>
+            </div>
+            <div class ="col-6">
+                <label class="form-label" for="password">Password</label>
+                <input class="form-control" type="password" id="password" />
+            </div>
+            <div class="col-6">
+                <label class="form-label" for="confirm-password">Confirm Password</label>
+                <input class="form-control" type="password" id="confirm-password" />
+            </div>
+        </div>
+        
+    </form>
+</div>
+
+@code {
+
+}

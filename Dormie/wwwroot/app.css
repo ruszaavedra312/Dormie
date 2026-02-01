@@ -4,6 +4,7 @@ html, body {
 
 a, .btn-link {
     color: #006bb7;
+    text-decoration: none;
 }
 
 .btn-primary {
@@ -58,3 +59,12 @@ h1:focus {
 .form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
     text-align: start;
 }
+
+h1, h2, h3, h4,h5, h6, p {
+    margin: 0;
+}
+
+.middle-text {
+    margin: 5rem 0 5rem 0;
+}
+
