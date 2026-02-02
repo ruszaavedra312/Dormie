@@ -1,10 +1,16 @@
 using Dormie.Components;
+using Dormie.Data;
+using Dormie.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
+
+// ADD YOUR SERVICES HERE
+builder.Services.AddScoped<UserService>();
+builder.Services.AddScoped<UserRepository>();
 
 var app = builder.Build();
 
