@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using Dormie.Components;
 using Dormie.Data;
 using Dormie.Services;
@@ -11,6 +12,11 @@ builder.Services.AddRazorComponents()
 // ADD YOUR SERVICES HERE
 builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<UserRepository>();
+
+builder.Services.AddDbContext<DormieDbContext>(options =>
+    options.UseSqlServer(
+        builder.Configuration.GetConnectionString("DefaultConnection")
+    ));
 
 var app = builder.Build();
 
