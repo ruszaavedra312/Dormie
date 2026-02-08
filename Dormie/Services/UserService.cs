@@ -21,11 +21,14 @@ namespace Dormie.Services
             if (user.Password.Length < 6)
                 throw new Exception("Password must be at least 6 characters");
 
-            // 2️⃣ Hash password
-            user.Password = BCrypt.Net.BCrypt.HashPassword(user.Password);
+            //// 2️⃣ Hash password
+            //user.Password = BCrypt.Net.BCrypt.HashPassword(user.Password);
 
-            // 3️⃣ Clear raw password (important)
-            user.Password = null;
+            //// 3️⃣ Clear raw password (important)
+            //user.Password = null;
+            var hashedPassword = BCrypt.Net.BCrypt.HashPassword(user.Password);
+            user.Password = hashedPassword;  // keep the hash
+            user.ConfirmPassword = null;      // optional, clear confirm password
 
             // 4️⃣ Save
             await _repo.AddUserAsync(user);
