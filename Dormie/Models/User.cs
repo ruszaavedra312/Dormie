@@ -1,16 +1,36 @@
-﻿namespace Dormie.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Dormie.Models
 {
     public class User
     {
-        public int Id { get; set; }   // Primary Key
+        public int Id { get; set; }
 
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
-        public string ContactNumber { get; set; }
-        public string Email { get; set; }
-        public UserTypeEnum UserType { get; set; }
-        public string Password { get; set; }
-        public string ConfirmPassword { get; set; }
-        public bool AcceptedTerms { get; set; }
+        [Required(ErrorMessage = "First name is required")]
+        public string FirstName { get; set; } = string.Empty;
+
+        [Required(ErrorMessage = "Last name is required")]
+        public string LastName { get; set; } = string.Empty;
+
+        [Required(ErrorMessage = "Contact number is required")]
+        public string ContactNumber { get; set; } = string.Empty;
+
+        [Required(ErrorMessage = "Email is required")]
+        [EmailAddress(ErrorMessage = "Invalid email format")]
+        public string Email { get; set; } = string.Empty;
+
+        [Required(ErrorMessage = "User type is required")]
+        public UserTypeEnum UserType { get; set; }  // Make nullable
+
+        [Required(ErrorMessage = "Password is required")]
+        [MinLength(6, ErrorMessage = "Password must be at least 6 characters")]
+        public string Password { get; set; } = string.Empty;
+
+        [Required(ErrorMessage = "Please re-enter your password")]
+        [Compare("Password", ErrorMessage = "Passwords do not match")]
+        public string ConfirmPassword { get; set; } = string.Empty;
+
+        [Range(typeof(bool), "true", "true", ErrorMessage = "You must accept the terms and conditions")]
+        public bool AcceptedTerms { get; set; } = false;
     }
 }
