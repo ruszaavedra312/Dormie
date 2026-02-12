@@ -1,64 +1,101 @@
 ﻿@page "/createuser"
+@using Dormie.Models
+@using Microsoft.AspNetCore.Components.Forms
+@inject Dormie.Services.UserService UserService
 
-<div class="text-center my-2">
-    <h3>Be part of our growing family</h3>
-</div>
 <div class="container d-flex justify-content-center align-items-center min-vh-70">
-    <form class="card p-4 rounded-4 shadow-sm" style="width: 80%;">
-        <div class="my-4 text-center">
-            <h3>
-                Be part of Dormie
-            </h3>
-        </div>
-        <div class="row justify-content-between">
+    <EditForm Model="@user" OnValidSubmit="HandleSubmit" FormName="CreateUserForm"
+              class="card p-4 rounded-4 shadow-sm" style="width: 80%;">
+        <DataAnnotationsValidator />
+
+        <div class="row">
             <div class="col-xl-6 col-12">
-                <label class="form-label" for="first-name">First Name</label>
-                <input class="form-control" type="text" id="first-name"/>
+                <label class="form-label">First Name</label>
+                <InputText class="form-control" @bind-Value="user.FirstName" />
+                <ValidationMessage For="@(() => user.FirstName)" />
             </div>
+
             <div class="col-xl-6 col-12">
-                <label class="form-label" for="last-name">Last Name</label>
-                <input class="form-control" type="text" id="last-name" />
+                <label class="form-label">Last Name</label>
+                <InputText class="form-control" @bind-Value="user.LastName" />
+                <ValidationMessage For="@(() => user.LastName)" />
             </div>
+
             <div class="col-xl-6 col-12">
-                <label class="form-label" for="contactnumber">Contact No.</label>
-                <input class="form-control" type="number" id="contactnumber"/>
+                <label class="form-label">Contact No.</label>
+                <InputText class="form-control" @bind-Value="user.ContactNumber" />
+                <ValidationMessage For="@(() => user.ContactNumber)" />
             </div>
+
             <div class="col-xl-6 col-12">
-                <label class="form-label" for="email">Email</label>
-                <input class="form-control" type="email" id="email" />
+                <label class="form-label">Email</label>
+                <InputText class="form-control" @bind-Value="user.Email" />
+                <ValidationMessage For="@(() => user.Email)" />
             </div>
-            <div class="col-6 d-flex flex-row gap-4 input-group my-2">
-                <div class="">
-                    <input type="radio" value="Renter" id="renter" name="usertype" aria-label="">
-                    <label for="renter">I am a Renter</label>
-                </div>
-                <div class="">
-                    <input type="radio" value="Owner" id="owner" name="usertype" aria-label="">
-                    <label for="owner">I am the Owner</label>
-                </div>
+
+            <div class="col-12 my-2">
+                <label>User Type</label>
+                <InputRadioGroup @bind-Value="user.UserType">
+                    <InputRadio Value="@UserTypeEnum.Renter" /> Renter
+                    <InputRadio Value="@UserTypeEnum.Owner" /> Owner
+                </InputRadioGroup>
+                <ValidationMessage For="@(() => user.UserType)" />
             </div>
+
             <div class="col-xl-6 col-12">
-                <label class="form-label" for="password">Password</label>
-                <input class="form-control" type="password" id="password" />
+                <label class="form-label">Password</label>
+                <InputText class="form-control" type="password" @bind-Value="user.Password" />
+                <ValidationMessage For="@(() => user.Password)" />
             </div>
+
             <div class="col-xl-6 col-12">
-                <label class="form-label" for="confirm-password">Confirm Password</label>
-                <input class="form-control" type="password" id="confirm-password" />
+                <label class="form-label">Confirm Password</label>
+                <InputText class="form-control" type="password" @bind-Value="user.ConfirmPassword" />
+                <ValidationMessage For="@(() => user.ConfirmPassword)" />
             </div>
-            <div class="col-xl-6 col-12">
-                <button type="submit" class="btn btn-primary" id="submitbtn">Submit</button>
-            </div>
+
             <div class="col-12 my-3">
-                <input type="checkbox" value="termsandcondition" id="terms" name="terms" aria-label="">
-                <label for=""> I agree to the
-                    <a href="#">Terms and Conditions</a> of <strong>Dormie</strong>
-                </label>
+                <InputCheckbox @bind-Value="user.AcceptedTerms" />
+                <label> I agree to the Terms and Conditions</label>
+                <ValidationMessage For="@(() => user.AcceptedTerms)" />
+            </div>
+
+            <div class="col-12">
+                <button type="submit" class="btn btn-primary" disabled="@IsSubmitting">
+                    @(IsSubmitting ? "Creating account..." : "Submit")
+                </button>
             </div>
         </div>
-        
-    </form>
+    </EditForm>
 </div>
+
+@if (!string.IsNullOrEmpty(Message))
+{
+    <div class="alert alert-info mt-3">@Message</div>
+}
 
 @code {
+    User user = new User();  // must initialize
 
+    string Message;
+    bool IsSubmitting = false;
+
+    async Task HandleSubmit()
+    {
+        try
+        {
+            IsSubmitting = true;
+            await UserService.CreateUserAsync(user);
+            Message = "Account created successfully!";
+            user = new User(); // reset
+        }
+        catch (Exception ex)
+        {
+            Message = ex.Message;
+        }
+        finally
+        {
+            IsSubmitting = false;
+        }
+    }
 }
