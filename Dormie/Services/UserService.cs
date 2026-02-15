@@ -16,7 +16,7 @@ namespace Dormie.Services
         {
             // 🔹 Check if email already exists
             if (await _repo.EmailExistsAsync(user.Email))
-                throw new Exception("Email already registered");
+                throw new Exception("Email has been taken");
 
             // 🔹 Hash password
             var hashedPassword = BCrypt.Net.BCrypt.HashPassword(user.Password);

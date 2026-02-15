@@ -4,39 +4,42 @@
 @using Microsoft.AspNetCore.Components.Forms
 @inject Dormie.Services.UserService UserService
 
+<h3 class="text-center p-4">Register to explore!</h3>
 <div class="container d-flex justify-content-center align-items-center min-vh-70">
     <EditForm FormName="CreateUserForm" Model="@user" OnValidSubmit="HandleSubmit"
-              class="card p-4 shadow-sm" style="width: 80%;">
+              class="card d-flex flex-lg-row p-4 justify-content-center align-items-center gap-4" style="width: 80%;">
         <DataAnnotationsValidator />
+        <div class="column d-none d-sm-block">
+            <img src="img/img-create-account.png" alt="Image" height="400px" />
+        </div>
+        <div class="column">
 
-        <div class="row">
-
-            <div class="col-6">
+            <div class="col-12">
                 <label>First Name</label>
                 <InputText class="form-control" @bind-Value="user.FirstName" />
                 <ValidationMessage For="@(() => user.FirstName)" />
             </div>
 
-            <div class="col-6">
+            <div class="col-12">
                 <label>Last Name</label>
                 <InputText class="form-control" @bind-Value="user.LastName" />
                 <ValidationMessage For="@(() => user.LastName)" />
             </div>
 
-            <div class="col-6">
+            <div class="col-12">
                 <label>Contact No.</label>
                 <InputText class="form-control" @bind-Value="user.ContactNumber" />
                 <ValidationMessage For="@(() => user.ContactNumber)" />
             </div>
 
-            <div class="col-6">
+            <div class="col-12">
                 <label>Email</label>
                 <InputText class="form-control" type="email" @bind-Value="user.Email" />
                 <ValidationMessage For="@(() => user.Email)" />
             </div>
 
             <div class="col-12 my-2">
-                <label>User Type</label>
+                <label>I am: </label>
                 <InputRadioGroup @bind-Value="user.UserType">
                     <InputRadio Value="@UserTypeEnum.Renter" /> Renter
                     <InputRadio Value="@UserTypeEnum.Owner" /> Owner
@@ -44,14 +47,14 @@
                 <ValidationMessage For="@(() => user.UserType)" />
             </div>
 
-            <div class="col-6">
+            <div class="col-12">
                 <label>Password</label>
                 <InputText type="password" class="form-control"
                            @bind-Value="user.Password" />
                 <ValidationMessage For="@(() => user.Password)" />
             </div>
 
-            <div class="col-6">
+            <div class="col-12">
                 <label>Confirm Password</label>
                 <InputText type="password" class="form-control"
                            @bind-Value="user.ConfirmPassword" />
@@ -60,13 +63,15 @@
 
             <div class="col-12 my-3">
                 <InputCheckbox @bind-Value="user.AcceptedTerms" />
-                <label> I agree to the Terms and Conditions</label>
+                @* <label> I agree to the Terms and Conditions</label> *@
                 <ValidationMessage For="@(() => user.AcceptedTerms)" />
+                <label> I agree to the
+                    <a href="#"> Terms and Conditions</a>
+                </label>
             </div>
 
             <div class="col-12">
-                <button type="submit" class="btn btn-primary"
-                        disabled="@isSubmitting">
+                <button type="submit" class="col-12 btn btn-primary" disabled="@isSubmitting">
                     @(isSubmitting ? "Creating..." : "Submit")
                 </button>
             </div>
@@ -98,7 +103,8 @@
         }
         catch (Exception ex)
         {
-            message = ex.ToString();
+            // message = ex.ToString();
+            message = ex.Message;
         }
         finally
         {
