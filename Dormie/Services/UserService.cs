@@ -14,23 +14,15 @@ namespace Dormie.Services
 
         public async Task CreateUserAsync(User user)
         {
-            // 1️⃣ Validate
-            if (string.IsNullOrWhiteSpace(user.Password))
-                throw new Exception("Password is required");
+            // 🔹 Check if email already exists
+            if (await _repo.EmailExistsAsync(user.Email))
+                throw new Exception("Email already registered");
 
-            if (user.Password.Length < 6)
-                throw new Exception("Password must be at least 6 characters");
-
-            //// 2️⃣ Hash password
-            //user.Password = BCrypt.Net.BCrypt.HashPassword(user.Password);
-
-            //// 3️⃣ Clear raw password (important)
-            //user.Password = null;
+            // 🔹 Hash password
             var hashedPassword = BCrypt.Net.BCrypt.HashPassword(user.Password);
-            user.Password = hashedPassword;  // keep the hash
-            user.ConfirmPassword = null;      // optional, clear confirm password
+            user.Password = hashedPassword;
 
-            // 4️⃣ Save
+            // 🔹 Save
             await _repo.AddUserAsync(user);
         }
     }

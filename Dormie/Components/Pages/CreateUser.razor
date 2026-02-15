@@ -1,35 +1,37 @@
 ﻿@page "/createuser"
+@rendermode InteractiveServer
 @using Dormie.Models
 @using Microsoft.AspNetCore.Components.Forms
 @inject Dormie.Services.UserService UserService
 
 <div class="container d-flex justify-content-center align-items-center min-vh-70">
-    <EditForm Model="@user" OnValidSubmit="HandleSubmit" FormName="CreateUserForm"
-              class="card p-4 rounded-4 shadow-sm" style="width: 80%;">
+    <EditForm FormName="CreateUserForm" Model="@user" OnValidSubmit="HandleSubmit"
+              class="card p-4 shadow-sm" style="width: 80%;">
         <DataAnnotationsValidator />
 
         <div class="row">
-            <div class="col-xl-6 col-12">
-                <label class="form-label">First Name</label>
+
+            <div class="col-6">
+                <label>First Name</label>
                 <InputText class="form-control" @bind-Value="user.FirstName" />
                 <ValidationMessage For="@(() => user.FirstName)" />
             </div>
 
-            <div class="col-xl-6 col-12">
-                <label class="form-label">Last Name</label>
+            <div class="col-6">
+                <label>Last Name</label>
                 <InputText class="form-control" @bind-Value="user.LastName" />
                 <ValidationMessage For="@(() => user.LastName)" />
             </div>
 
-            <div class="col-xl-6 col-12">
-                <label class="form-label">Contact No.</label>
+            <div class="col-6">
+                <label>Contact No.</label>
                 <InputText class="form-control" @bind-Value="user.ContactNumber" />
                 <ValidationMessage For="@(() => user.ContactNumber)" />
             </div>
 
-            <div class="col-xl-6 col-12">
-                <label class="form-label">Email</label>
-                <InputText class="form-control" @bind-Value="user.Email" />
+            <div class="col-6">
+                <label>Email</label>
+                <InputText class="form-control" type="email" @bind-Value="user.Email" />
                 <ValidationMessage For="@(() => user.Email)" />
             </div>
 
@@ -42,15 +44,17 @@
                 <ValidationMessage For="@(() => user.UserType)" />
             </div>
 
-            <div class="col-xl-6 col-12">
-                <label class="form-label">Password</label>
-                <InputText class="form-control" type="password" @bind-Value="user.Password" />
+            <div class="col-6">
+                <label>Password</label>
+                <InputText type="password" class="form-control"
+                           @bind-Value="user.Password" />
                 <ValidationMessage For="@(() => user.Password)" />
             </div>
 
-            <div class="col-xl-6 col-12">
-                <label class="form-label">Confirm Password</label>
-                <InputText class="form-control" type="password" @bind-Value="user.ConfirmPassword" />
+            <div class="col-6">
+                <label>Confirm Password</label>
+                <InputText type="password" class="form-control"
+                           @bind-Value="user.ConfirmPassword" />
                 <ValidationMessage For="@(() => user.ConfirmPassword)" />
             </div>
 
@@ -61,41 +65,44 @@
             </div>
 
             <div class="col-12">
-                <button type="submit" class="btn btn-primary" disabled="@IsSubmitting">
-                    @(IsSubmitting ? "Creating account..." : "Submit")
+                <button type="submit" class="btn btn-primary"
+                        disabled="@isSubmitting">
+                    @(isSubmitting ? "Creating..." : "Submit")
                 </button>
             </div>
+
         </div>
     </EditForm>
 </div>
 
-@if (!string.IsNullOrEmpty(Message))
+@if (!string.IsNullOrEmpty(message))
 {
-    <div class="alert alert-info mt-3">@Message</div>
+    <div class="alert alert-info mt-3">@message</div>
 }
 
 @code {
-    User user = new User();  // must initialize
+    private User user = new();
+    private string message = "";
+    private bool isSubmitting = false;
 
-    string Message;
-    bool IsSubmitting = false;
-
-    async Task HandleSubmit()
+    private async Task HandleSubmit()
     {
         try
         {
-            IsSubmitting = true;
+            isSubmitting = true;
+
             await UserService.CreateUserAsync(user);
-            Message = "Account created successfully!";
-            user = new User(); // reset
+
+            message = "Account created successfully!";
+            user = new();
         }
         catch (Exception ex)
         {
-            Message = ex.Message;
+            message = ex.ToString();
         }
         finally
         {
-            IsSubmitting = false;
+            isSubmitting = false;
         }
     }
 }

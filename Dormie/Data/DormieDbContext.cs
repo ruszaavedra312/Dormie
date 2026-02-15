@@ -1,6 +1,5 @@
 ﻿using Dormie.Models;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
 
 namespace Dormie.Data
 {
@@ -11,7 +10,13 @@ namespace Dormie.Data
         {
         }
 
-        // Tables
         public DbSet<User> Users { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<User>()
+                .Property(u => u.UserType)
+                .HasConversion<string>();  // Store enum as string
+        }
     }
 }
