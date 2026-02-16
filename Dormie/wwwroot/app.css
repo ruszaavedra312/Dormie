@@ -68,4 +68,45 @@ h1, h2, h3, h4,h5, h6, p {
 .middle-text {
     margin: 5rem 0 5rem 0;
 }
+.checkbox-wrapper-16 {
+    position: relative;
+    cursor: pointer;
+}
+
+.checkbox-wrapper-16 .checkbox-input {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    appearance: none;
+}
+
+
+.checkbox-wrapper-16 .checkbox-tile {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 8rem;
+    height: 8rem;
+    border-radius: 12px;
+    border: 2px solid #dee2e6;
+    transition: all 0.3s ease;
+}
+
+.checkbox-wrapper-16 .checkbox-input:checked + .checkbox-tile {
+    border-color: #0d6efd;
+    background-color: #e7f1ff;
+    transform: scale(1.05);
+}
+
+.checkbox-wrapper-16 .checkbox-tile:hover {
+    border-color: #0d6efd;
+}
+
+.checkbox-wrapper-16 .checkbox-label {
+    margin-top: 8px;
+    font-weight: 500;
+}
+
+
 

@@ -3,92 +3,240 @@
 @using Dormie.Models
 @using Microsoft.AspNetCore.Components.Forms
 @inject Dormie.Services.UserService UserService
+@inject IJSRuntime JS
 
 <h3 class="text-center p-4">Register to explore!</h3>
+
 <div class="container d-flex justify-content-center align-items-center min-vh-70">
-    <EditForm FormName="CreateUserForm" Model="@user" OnValidSubmit="HandleSubmit"
-              class="card d-flex flex-lg-row p-4 justify-content-center align-items-center gap-4" style="width: 80%;">
+
+    <EditForm Model="@user"
+              OnValidSubmit="HandleSubmit"
+              class="card p-4 border-0"
+              style="width: 80%;">
+
         <DataAnnotationsValidator />
-        <div class="column d-none d-sm-block">
-            <img src="img/img-create-account.png" alt="Image" height="400px" />
+
+        <h5 class="text-center fw-bold display-1 @(currentStep == 3 ? "text-success" : "text-primary")">
+            @GetStepDisplay()
+        </h5>
+
+        <div id="userFormCarousel"
+             class="carousel slide"
+             data-bs-interval="false"
+             data-bs-wrap="false">
+
+            <div class="carousel-inner">
+
+                <!-- STEP 1 -->
+                <div class="carousel-item active">
+                    <div class="d-flex flex-column gap-3">
+
+                        <h4 class="text-center">I am:</h4>
+
+                        <InputRadioGroup @bind-Value="user.UserType">
+                            <div class="d-flex gap-4 justify-content-center m-2">
+
+                                <!-- RENTER -->
+                                <label class="checkbox-wrapper-16">
+                                    <InputRadio Value="@UserTypeEnum.Renter"
+                                                class="checkbox-input" />
+                                    <div class="checkbox-tile">
+                                        <div class="checkbox-icon">
+                                            <i class="bi bi-person fs-1"></i>
+                                        </div>
+                                        <div class="checkbox-label">Renter</div>
+                                    </div>
+                                </label>
+
+                                <!-- OWNER -->
+                                <label class="checkbox-wrapper-16">
+                                    <InputRadio Value="@UserTypeEnum.Owner"
+                                                class="checkbox-input" />
+                                    <div class="checkbox-tile">
+                                        <div class="checkbox-icon">
+                                            <i class="bi bi-house-door fs-1"></i>
+                                        </div>
+                                        <div class="checkbox-label">Owner</div>
+                                    </div>
+                                </label>
+
+                            </div>
+                        </InputRadioGroup>
+
+                        <ValidationMessage For="@(() => user.UserType)" />
+
+                    </div>
+                </div>
+
+                <!-- STEP 2 -->
+                <div class="carousel-item">
+                    <div class="d-flex flex-column gap-3">
+
+                        <h4>Personal Info</h4>
+
+                        <div>
+                            <label>First Name</label>
+                            <InputText class="form-control"
+                                       @bind-Value="user.FirstName" />
+                            <ValidationMessage For="@(() => user.FirstName)" />
+                        </div>
+
+                        <div>
+                            <label>Last Name</label>
+                            <InputText class="form-control"
+                                       @bind-Value="user.LastName" />
+                            <ValidationMessage For="@(() => user.LastName)" />
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- STEP 3 -->
+                <div class="carousel-item">
+                    <div class="d-flex flex-column gap-3">
+
+                        <h4>Contact Info</h4>
+
+                        <div>
+                            <label>Contact No.</label>
+                            <InputText class="form-control"
+                                       @bind-Value="user.ContactNumber" />
+                            <ValidationMessage For="@(() => user.ContactNumber)" />
+                        </div>
+
+                        <div>
+                            <label>Email</label>
+                            <InputText class="form-control"
+                                       type="email"
+                                       @bind-Value="user.Email" />
+                            <ValidationMessage For="@(() => user.Email)" />
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- STEP 4 -->
+                <div class="carousel-item">
+                    <div class="d-flex flex-column gap-3">
+
+                        <h4>Security</h4>
+
+                        <div>
+                            <label>Password</label>
+                            <InputText type="password"
+                                       class="form-control"
+                                       @bind-Value="user.Password" />
+                            <ValidationMessage For="@(() => user.Password)" />
+                        </div>
+
+                        <div>
+                            <label>Confirm Password</label>
+                            <InputText type="password"
+                                       class="form-control"
+                                       @bind-Value="user.ConfirmPassword" />
+                            <ValidationMessage For="@(() => user.ConfirmPassword)" />
+                        </div>
+
+                        <div class="form-check mt-2">
+                            <InputCheckbox class="form-check-input"
+                                           @bind-Value="user.AcceptedTerms" />
+                            <label class="form-check-label">
+                                I agree to the Terms and Conditions
+                            </label>
+                            <ValidationMessage For="@(() => user.AcceptedTerms)" />
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- BUTTON SECTION -->
+            <div class="mt-4 d-flex justify-content-between">
+
+                @if (currentStep > 0)
+                {
+                    <button type="button"
+                            class="btn btn-outline-secondary px-4"
+                            @onclick="PrevSlide">
+                        Previous
+                    </button>
+                }
+                else
+                {
+                    <div></div>
+                }
+
+                @if (currentStep < totalSteps - 1)
+                {
+                    <button type="button"
+                            class="btn btn-primary px-4"
+                            @onclick="NextSlide">
+                        Next
+                    </button>
+                }
+                else
+                {
+                    <button type="submit"
+                            class="btn btn-success px-4"
+                            disabled="@isSubmitting">
+                        @(isSubmitting ? "Creating..." : "Submit")
+                    </button>
+                }
+
+            </div>
+
         </div>
-        <div class="column">
 
-            <div class="col-12">
-                <label>First Name</label>
-                <InputText class="form-control" @bind-Value="user.FirstName" />
-                <ValidationMessage For="@(() => user.FirstName)" />
-            </div>
-
-            <div class="col-12">
-                <label>Last Name</label>
-                <InputText class="form-control" @bind-Value="user.LastName" />
-                <ValidationMessage For="@(() => user.LastName)" />
-            </div>
-
-            <div class="col-12">
-                <label>Contact No.</label>
-                <InputText class="form-control" @bind-Value="user.ContactNumber" />
-                <ValidationMessage For="@(() => user.ContactNumber)" />
-            </div>
-
-            <div class="col-12">
-                <label>Email</label>
-                <InputText class="form-control" type="email" @bind-Value="user.Email" />
-                <ValidationMessage For="@(() => user.Email)" />
-            </div>
-
-            <div class="col-12 my-2">
-                <label>I am: </label>
-                <InputRadioGroup @bind-Value="user.UserType">
-                    <InputRadio Value="@UserTypeEnum.Renter" /> Renter
-                    <InputRadio Value="@UserTypeEnum.Owner" /> Owner
-                </InputRadioGroup>
-                <ValidationMessage For="@(() => user.UserType)" />
-            </div>
-
-            <div class="col-12">
-                <label>Password</label>
-                <InputText type="password" class="form-control"
-                           @bind-Value="user.Password" />
-                <ValidationMessage For="@(() => user.Password)" />
-            </div>
-
-            <div class="col-12">
-                <label>Confirm Password</label>
-                <InputText type="password" class="form-control"
-                           @bind-Value="user.ConfirmPassword" />
-                <ValidationMessage For="@(() => user.ConfirmPassword)" />
-            </div>
-
-            <div class="col-12 my-3">
-                <InputCheckbox @bind-Value="user.AcceptedTerms" />
-                @* <label> I agree to the Terms and Conditions</label> *@
-                <ValidationMessage For="@(() => user.AcceptedTerms)" />
-                <label> I agree to the
-                    <a href="#"> Terms and Conditions</a>
-                </label>
-            </div>
-
-            <div class="col-12">
-                <button type="submit" class="col-12 btn btn-primary" disabled="@isSubmitting">
-                    @(isSubmitting ? "Creating..." : "Submit")
-                </button>
-            </div>
-
-        </div>
     </EditForm>
+
 </div>
 
-@if (!string.IsNullOrEmpty(message))
+@* @if (!string.IsNullOrEmpty(message))
 {
-    <div class="alert alert-info mt-3">@message</div>
-}
+    <div class="alert alert-success mt-3 text-center">
+        @message
+    </div>
+} *@
 
 @code {
-    private User user = new();
-    private string message = "";
+
+    private User user = new User();
     private bool isSubmitting = false;
+    //private string? message;
+
+    private int currentStep = 0;
+    private int totalSteps = 4;
+
+    private string GetStepDisplay()
+    {
+        return currentStep switch
+        {
+            0 => "3",
+            1 => "2",
+            2 => "1",
+            3 => "GO!",
+            _ => ""
+        };
+    }
+
+    private async Task NextSlide()
+    {
+        if (currentStep < totalSteps - 1)
+        {
+            currentStep++;
+            await JS.InvokeVoidAsync("carouselHelper.next", "userFormCarousel");
+        }
+    }
+
+    private async Task PrevSlide()
+    {
+        if (currentStep > 0)
+        {
+            currentStep--;
+            await JS.InvokeVoidAsync("carouselHelper.prev", "userFormCarousel");
+        }
+    }
 
     private async Task HandleSubmit()
     {
@@ -98,17 +246,44 @@
 
             await UserService.CreateUserAsync(user);
 
-            message = "Account created successfully!";
+            await JS.InvokeVoidAsync("sweetAlertHelper.showSuccess",
+                "Success!",
+                "Account created successfully!");
+
             user = new();
         }
         catch (Exception ex)
         {
-            // message = ex.ToString();
-            message = ex.Message;
+            await JS.InvokeVoidAsync("sweetAlertHelper.showError",
+                "Error",
+                ex.Message);
         }
         finally
         {
             isSubmitting = false;
         }
     }
+
+
+    // private async Task HandleSubmit()
+    // {
+    //     try
+    //     {
+    //         isSubmitting = true;
+
+    //         await UserService.CreateUserAsync(user);
+
+    //         message = "Account created successfully!";
+    //         user = new();
+    //     }
+    //     catch (Exception ex)
+    //     {
+    //         message = ex.Message;
+    //     }
+    //     finally
+    //     {
+    //         isSubmitting = false;
+    //     }
+    // }
+
 }
