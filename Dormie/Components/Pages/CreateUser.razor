@@ -1,9 +1,11 @@
 ﻿@page "/createuser"
 @rendermode InteractiveServer
 @using Dormie.Models
+@using Microsoft.AspNetCore.Components
 @using Microsoft.AspNetCore.Components.Forms
 @inject Dormie.Services.UserService UserService
 @inject IJSRuntime JS
+@inject NavigationManager Navigation
 
 <h3 class="text-center p-4">Register to explore!</h3>
 
@@ -192,13 +194,6 @@
 
 </div>
 
-@* @if (!string.IsNullOrEmpty(message))
-{
-    <div class="alert alert-success mt-3 text-center">
-        @message
-    </div>
-} *@
-
 @code {
 
     private User user = new User();
@@ -250,7 +245,8 @@
                 "Success!",
                 "Account created successfully!");
 
-            user = new();
+            Navigation.NavigateTo("/");
+            // user = new();
         }
         catch (Exception ex)
         {
@@ -263,27 +259,5 @@
             isSubmitting = false;
         }
     }
-
-
-    // private async Task HandleSubmit()
-    // {
-    //     try
-    //     {
-    //         isSubmitting = true;
-
-    //         await UserService.CreateUserAsync(user);
-
-    //         message = "Account created successfully!";
-    //         user = new();
-    //     }
-    //     catch (Exception ex)
-    //     {
-    //         message = ex.Message;
-    //     }
-    //     finally
-    //     {
-    //         isSubmitting = false;
-    //     }
-    // }
 
 }
