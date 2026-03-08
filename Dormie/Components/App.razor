@@ -8,7 +8,7 @@
 
     <ResourcePreloader />
 
-    <!-- Bootstrap CSS (ONLY ONE) -->
+    <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="@Assets["lib/bootstrap/dist/css/bootstrap.min.css"]" />
 
     <!-- Bootstrap Icons -->
@@ -25,7 +25,10 @@
 </head>
 
 <body>
-    <Routes />
+    <CascadingAuthenticationState>
+        <Routes />
+    </CascadingAuthenticationState>
+
     <ReconnectModal />
 
     <!-- Blazor -->
@@ -55,4 +58,5 @@
     </script>
 
 </body>
+
 </html>
