@@ -1,0 +1,35 @@
+﻿@page "/LoginHome"
+@attribute [Authorize]
+@using Dormie.Models
+@using Dormie.Services
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.Forms
+@using System.Net.Http.Json
+
+@* @inject HttpClient Http *@
+@inject AuthService AuthService
+@inject NavigationManager Navigation
+
+@inject IHttpClientFactory ClientFactory
+
+@* <button class="btn btn-danger" @onclick="Logout">
+    Logout
+</button> *@
+
+<h3>Welcome to Dormie</h3>
+<form method="post" action="/logout">
+    <button class="btn btn-danger">Logout</button>
+</form>
+
+@* @code {
+
+    async Task Logout()
+    {
+        var client = ClientFactory.CreateClient();
+
+        await client.PostAsync($"{Navigation.BaseUri}api/logout", null);
+
+        Navigation.NavigateTo("/login", true);
+    }
+
+} *@
