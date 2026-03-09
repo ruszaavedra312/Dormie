@@ -1,0 +1,47 @@
+﻿@page "/form"
+@inject IJSRuntime JS
+
+<h3>Carousel</h3>
+<div id="userFormCarousel" class="d-flex flex-column bg-black carousel slide" data-bs-interval="false" data-bs-wrap="false">
+    <div class="carousel-inner">
+        <div class="carousel-item active">
+            <h1>Text</h1><!-- Step 1 -->
+            <input type="text" class="col-12"/>
+        </div>
+        <div class="carousel-item">
+            <h1>Text</h1><!-- Step 2 -->
+            <input type="text" class="col-12" />
+        </div>
+        <div class="carousel-item">
+            <h1>Text</h1><!-- Step 3 -->
+            <input type="text" class="col-12" />
+        </div>
+    </div>
+
+    <div class="">
+        <button class="carousel-control-prev" type="button" data-bs-target="#userFormCarousel" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#userFormCarousel" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="">Next</span>
+        </button>
+    </div>
+</div>
+
+
+
+@code {
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await JS.InvokeVoidAsync("eval", @"
+                var carouselEl = document.querySelector('#userFormCarousel');
+                var carousel = new bootstrap.Carousel(carouselEl, { interval: false, wrap: false });
+            ");
+        }
+    }
+}
+

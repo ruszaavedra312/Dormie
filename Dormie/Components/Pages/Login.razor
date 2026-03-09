@@ -1,0 +1,59 @@
+﻿@page "/login"
+@* @rendermode InteractiveServer *@
+@attribute [AllowAnonymous]
+
+@using Dormie.Models
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.Forms
+@using System.Net.Http.Json
+
+@inject IHttpClientFactory ClientFactory
+@inject NavigationManager Navigation
+
+
+<h3>Login</h3>
+
+<form method="post" action="/api/login">
+
+    <div class="mb-3">
+        <label>Email</label>
+        <input class="form-control" name="Email" />
+    </div>
+
+    <div class="mb-3">
+        <label>Password</label>
+        <input type="password" class="form-control" name="Password" />
+    </div>
+
+    <button class="btn btn-primary">Login</button>
+
+</form>
+
+@* @if (!string.IsNullOrEmpty(error))
+{
+    <p class="text-danger">@error</p>
+}
+
+@code {
+
+    private LoginRequest loginModel = new();
+    private string error;
+
+    private async Task HandleLogin()
+    {
+        var client = ClientFactory.CreateClient();
+
+        var response = await client.PostAsJsonAsync(
+            $"{Navigation.BaseUri}api/login",
+            loginModel);
+
+        if (!response.IsSuccessStatusCode)
+        {
+            error = "Invalid login.";
+            return;
+        }
+
+        Navigation.NavigateTo("/LoginHome", true);
+    }
+
+} *@
